@@ -262,6 +262,24 @@ module VCR
         end
       end
 
+      describe ":body_as_key_value" do
+        it 'matches when the body key-values are reordered' do
+          matches = subject[:body_as_key_value].matches?(
+            request_with(:body => 'a=1&b=2'),
+            request_with(:body => 'b=2&a=1')
+          )
+          expect(matches).to be_true
+        end
+
+        it 'does not match when the body key-values do not match' do
+          matches = subject[:body_as_key_value].matches?(
+            request_with(:body => 'a=1&b=2'),
+            request_with(:body => 'a=1&b=1')
+          )
+          expect(matches).to be_false
+        end
+      end
+
       describe ":headers" do
         it 'matches when it is the same' do
           matches = subject[:headers].matches?(

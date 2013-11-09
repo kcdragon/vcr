@@ -125,6 +125,18 @@ module VCR
         VCR.configuration.query_parser.call(r1.parsed_uri.query.to_s) ==
           VCR.configuration.query_parser.call(r2.parsed_uri.query.to_s)
       end
+
+      register(:body_as_key_value) do |r1, r2|
+        parse_key_value(r1.body) == parse_key_value(r2.body)
+      end
+    end
+
+    def parse_key_value(body)
+      body.split('&').inject({}) do |memo, pair|
+        key, value = pair.split('=')
+        memo[key] = value
+        memo
+      end
     end
   end
 end
